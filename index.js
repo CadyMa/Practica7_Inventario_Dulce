@@ -129,12 +129,12 @@ app.get('/editar', (req, res) => {
         if (error){
             console.log('Error al consultar el producto')
         } else {
-            // 2. Si el producto existe, buscamos las marcas dinámicas
+            // 2. Buscamos las marcas de la base de datos
             base_datos.all(sqlMarcas, (errorMarcas, lista_marcas) => {
                 if (errorMarcas) {
                     console.log('Error al consultar las marcas')
                 } else {
-                    // 3. Mandamos tanto la info del producto (fila) como de las marcas (lista_marcas)
+                    // 3. Mandamos tanto el producto (fila) como las marcas (lista_marcas)
                     res.render('editar.ejs', { fila, lista_marcas })
                 }
             })
