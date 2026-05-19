@@ -119,14 +119,25 @@ app.post('/nueva_marca', (req, res) => {
 })
 
 
-app.get('/editar_marca', (req,res) => {
+app.get('/editar', (req, res) => {
     const id = req.query.id
-    const sql = 'select * from marcas where id=?'
-    base_datos.all(sql, [id], (error, fila)=> {
+    const sqlProducto = 'select * from productos where id=?'
+    const sqlMarcas = 'select * from marcas order by marca'
+    
+    // 1. Buscamos el producto primero
+    base_datos.all(sqlProducto, [id], (error, fila)=> {
         if (error){
-            console.log('Error al consultar la marca')
+            console.log('Error al consultar el producto')
         } else {
-            res.render('editar_marca.ejs',{ fila })
+            // 2. Si el producto existe, buscamos las marcas dinámicas
+            base_datos.all(sqlMarcas, (errorMarcas, lista_marcas) => {
+                if (errorMarcas) {
+                    console.log('Error al consultar las marcas')
+                } else {
+                    // 3. Mandamos tanto la info del producto (fila) como de las marcas (lista_marcas)
+                    res.render('editar.ejs', { fila, lista_marcas })
+                }
+            })
         }
     })    
 })
@@ -145,6 +156,7 @@ app.post('/editar_marca', (req, res) => {
 
 
 //******** Ejecución del servidor */
+
 const PORT = process.env.PORT || 3000
 
 app.listen(PORT, () => {
