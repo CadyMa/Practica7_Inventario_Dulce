@@ -3,11 +3,11 @@ const sqlite = require('sqlite3')
 
 const app = express()
 
-//*******  Configuraciones  */
+//******* Configuraciones  */
 app.set('view engine','ejs')
 
 
-//******  Middleware ************/
+//****** Middleware ************/
 app.use(express.static('public'))
 app.use(express.urlencoded({extended:false}))
 
@@ -22,7 +22,7 @@ const base_datos = new sqlite.Database('datos.db',sqlite.OPEN_READWRITE, (error)
 }) 
 
 
-//*******  Rutas  ***********/
+//******* Rutas  ***********/
 app.get('/', (req, res)=>{
     const sql = 'select * from productos'
     base_datos.all(sql,(error, resultado)=>{
@@ -71,16 +71,17 @@ app.get('/eliminar', (req, res) => {
     })
 })
 
-app.get('/editar', (req,res) => {
+// RUTA CORREGIDA: Usa base_datos.get para que coincida con tus variables
+app.get('/editar', (req, res) => {
     const id = req.query.id
-    const sql = 'select * from productos where id=?'
-    base_datos.all(sql, [id], (error, fila)=> {
-        if (error){
-            console.log('Error al coonsultar el producto')
+    const sql = 'select * from productos where id = ?'
+    base_datos.get(sql, [id], (error, fila) => {
+        if (error) {
+            console.log('Error al consultar la base de datos')
         } else {
-            res.render('editar.ejs',{ fila })
+            res.render('editar.ejs', { fila })
         }
-    })    
+    })
 })
 
 app.post('/editar', (req, res) => {
@@ -118,18 +119,16 @@ app.post('/nueva_marca', (req, res) => {
     })
 })
 
-
-app.get('/editar', (req, res) => {
+app.get('/editar_marca', (req,res) => {
     const id = req.query.id
-    const sql = 'select * from productos where id = ?'
-    db.get(sql, [id], (error, fila) => {
-        if (error) {
-            const mensaje = 'Error al consultar la base de datos'
-            res.render('error.ejs', { mensaje })
+    const sql = 'select * from marcas where id=?'
+    base_datos.get(sql, [id], (error, fila)=> {
+        if (error){
+            console.log('Error al consultar la marca')
         } else {
-            res.render('editar.ejs', { fila })
+            res.render('editar_marca.ejs',{ fila })
         }
-    })
+    })    
 })
 
 app.post('/editar_marca', (req, res) => {
@@ -144,9 +143,20 @@ app.post('/editar_marca', (req, res) => {
     })
 })
 
+app.get('/eliminar_marca', (req, res) => {
+    const id = req.query.id
+    const sql = 'delete from marcas where id=?'
+    base_datos.run(sql, [id], (error) => {
+        if (error) {
+            console.log('Error al eliminar la marca')
+        } else {
+            res.redirect('/marcas')
+        }
+    })
+})
+
 
 //******** Ejecución del servidor */
-
 const PORT = process.env.PORT || 3000
 
 app.listen(PORT, () => {
