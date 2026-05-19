@@ -4,15 +4,15 @@
 
         <div class="card mx-auto mt-5" style="width: 25rem;">
             <div class="card-body">
-                <input type="hidden" name="id" value="<%= fila[0].id %>">
+                <input type="hidden" name="id" value="<%= fila.id %>">
 
                 <label>Nombre del producto</label>
                 <input type="text" name="nombre" class="form-control" required minlength="4" maxlength="30"
-                    value="<%= fila[0].nombre %>">
+                    value="<%= fila.nombre %>">
                 <label>Marca</label>
                 <%
                     function etiqueta(valor){
-                        if (valor == fila[0].marca){
+                        if (valor == fila.marca){
                             return 'selected'
                         } 
                         return ''
@@ -29,10 +29,10 @@
 
                 <label>Precio</label>
                 <input type="number" name="precio" class="form-control" required min="0" max="1000"
-                    value="<%= fila[0].precio %>">
+                    value="<%= fila.precio %>">
 
                 <label>Stock</label>
-                <input type="number" name="stock" class="form-control" required min="0" value="<%= fila[0].stock %>">
+                <input type="number" name="stock" class="form-control" required min="0" value="<%= fila.stock %>">
 
             </div>
             <div class="card-footer">
@@ -43,6 +43,5 @@
         </div>
         </div>
     </form>
-
 
     <%- include('pie_pagina.ejs') %>

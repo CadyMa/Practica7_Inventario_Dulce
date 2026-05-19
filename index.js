@@ -121,14 +121,15 @@ app.post('/nueva_marca', (req, res) => {
 
 app.get('/editar', (req, res) => {
     const id = req.query.id
-    const sql = 'select * from productos where id=?'
-    base_datos.all(sql, [id], (error, fila)=> {
-        if (error){
-            console.log('Error al consultar el producto')
+    const sql = 'select * from productos where id = ?'
+    db.get(sql, [id], (error, fila) => {
+        if (error) {
+            const mensaje = 'Error al consultar la base de datos'
+            res.render('error.ejs', { mensaje })
         } else {
             res.render('editar.ejs', { fila })
         }
-    })    
+    })
 })
 
 app.post('/editar_marca', (req, res) => {
