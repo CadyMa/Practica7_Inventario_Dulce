@@ -119,29 +119,35 @@ app.post('/nueva_marca', (req, res) => {
     })
 })
 
-app.get('/editar_marca', (req,res) => {
-    const id = req.query.id
-    const sql = 'select * from marcas where id=?'
-    base_datos.get(sql, [id], (error, fila)=> {
-        if (error){
-            console.log('Error al consultar la marca')
+app.get('/editar_marca', (req, res) => {
+    const id = req.query.id;
+    const sql = "SELECT * FROM marcas WHERE id = ?";
+    
+    base_datos.get(sql, [id], (error, fila) => {
+        if (error) {
+            console.log('Error al buscar la marca');
+            res.send('Error');
         } else {
-            res.render('editar_marca.ejs',{ fila })
+            // Le pasa la marca encontrada a la plantilla
+            res.render('editar_marca.ejs', { marca: fila });
         }
-    })    
-})
+    });
+});
 
 app.post('/editar_marca', (req, res) => {
-    const {id, marca } = req.body
-    const sql = "update marcas set marca=? where id=?"
-    base_datos.run(sql, [marca,id], (error) => {
-        if (error){
-            console.log('Error al actualizar la marca')
+    const { id, marca } = req.body;
+    const sql = "UPDATE marcas SET marca = ? WHERE id = ?";
+    
+    base_datos.run(sql, [marca, id], (error) => {
+        if (error) {
+            console.log('Error al modificar la marca');
+            res.send('Error al guardar');
         } else {
-            res.redirect('/marcas')
+            // Te regresa directo a la lista de marcas ya actualizada
+            res.redirect('/marcas');
         }
-    })
-})
+    });
+});
 
 app.get('/eliminar_marca', (req, res) => {
     const id = req.query.id
