@@ -28,8 +28,9 @@
                                 <td><%= fila.marca %></td>
                                 <td class="text-center">
                                     <a href="/editar_marca?id=<%= fila.id %>" class="btn btn-success"><img src="imagenes/edit.png"></a>
-                                    <a href="/eliminar_marca?id=<%= fila.id %>" 
-                                         class="btn btn-danger"><img src="imagenes/delete.png"></a>
+                                    <a href="/eliminar_marca?id=<%= fila.id %>" class="btn btn-danger" onclick="return confirm('Desea eliminar la marca?')">
+    <img src="imagenes/delete.png">
+</a>
                                 </td>
                             </tr>
                             <% } %>

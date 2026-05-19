@@ -1,14 +1,20 @@
-<div class="container mt-4">
-    <h2>Editar marca</h2>
-    
+<%- include('encabezado.ejs') %>
+
+<div class="container mt-5">
     <form action="/editar_marca" method="POST">
-        <input type="hidden" name="id" value="<%= marca.id %>">
-        
-        <div class="mb-3">
-            <input type="text" name="marca" class="form-control" value="<%= marca.marca %>" required>
+        <div class="card mx-auto" style="width: 25rem;">
+            <div class="card-body">
+                <label class="mb-2">Editar marca</label>
+                <input type="hidden" name="id" value="<%= marca.id %>">
+                <input type="text" name="marca" class="form-control" value="<%= marca.marca %>" required>
+            </div>
+            
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Modificar</button>
+                <button type="reset" class="btn btn-secondary">Restablecer</button>
+            </div>
         </div>
-        
-        <button type="submit" class="btn btn-primary">Modificar</button>
-        <button type="reset" class="btn btn-secondary">Restablecer</button>
     </form>
 </div>
+
+<%- include('pie_pagina.ejs') %>
