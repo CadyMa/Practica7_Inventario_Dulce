@@ -23,29 +23,62 @@ const base_datos = new sqlite.Database('datos.db',sqlite.OPEN_READWRITE, (error)
 
 
 //******* Rutas  ***********/
+// 1. Mostrar la página principal
 app.get('/', (req, res)=>{
-    const sql = 'select * from productos'
+    // Usamos LEFT JOIN y COALESCE para cambiar el ID numérico por el texto de la marca
+    const sql = `
+        SELECT productos.id, productos.nombre, productos.precio, productos.stock,
+               COALESCE(marcas.marca, productos.marca) AS marca
+        FROM productos
+        LEFT JOIN marcas ON productos.marca = marcas.id
+    `;
     base_datos.all(sql,(error, resultado)=>{
         if (error){
-            console.log('Error en la consulta a la base de datos')
+            console.log('Error en la consulta a la base de datos');
         } else {
-            res.render('principal.ejs',{resultado})
+            res.render('principal.ejs', {resultado});
         }
-    })
-})
+    });
+});
 
+// 2. Buscar productos
 app.post('/buscar', (req, res)=>{
-    const filtro = req.body.buscar + '%'
-
-    const sql = 'select * from productos where nombre like ?'
+    const filtro = req.body.buscar + '%';
+    const sql = `
+        SELECT productos.id, productos.nombre, productos.precio, productos.stock,
+               COALESCE(marcas.marca, productos.marca) AS marca
+        FROM productos
+        LEFT JOIN marcas ON productos.marca = marcas.id
+        WHERE productos.nombre LIKE ?
+    `;
     base_datos.all(sql, [filtro], (error, resultado)=>{
         if (error){
-            console.log('Error en la consulta a la base de datos')
+            console.log('Error en la consulta a la base de datos');
         } else {
-            res.render('principal.ejs',{resultado})
+            res.render('principal.ejs', {resultado});
         }
-    })
-})
+    });
+});
+
+// 3. Pantalla de editar producto
+app.get('/editar', (req, res) => {
+    const id = req.query.id;
+    // Aplicamos el JOIN también aquí para que el menú autoseleccione la marca correcta
+    const sql = `
+        SELECT productos.id, productos.nombre, productos.precio, productos.stock,
+               COALESCE(marcas.marca, productos.marca) AS marca
+        FROM productos
+        LEFT JOIN marcas ON productos.marca = marcas.id
+        WHERE productos.id = ?
+    `;
+    base_datos.get(sql, [id], (error, fila) => {
+        if (error) {
+            console.log('Error al consultar la base de datos');
+        } else {
+            res.render('editar.ejs', { fila });
+        }
+    });
+});
 
 app.post('/nuevo', (req, res) => {
     const {nombre, marca, precio, stock} = req.body
