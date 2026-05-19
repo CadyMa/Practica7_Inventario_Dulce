@@ -121,23 +121,12 @@ app.post('/nueva_marca', (req, res) => {
 
 app.get('/editar', (req, res) => {
     const id = req.query.id
-    const sqlProducto = 'select * from productos where id=?'
-    const sqlMarcas = 'select * from marcas order by marca'
-    
-    // 1. Buscamos el producto primero
-    base_datos.all(sqlProducto, [id], (error, fila)=> {
+    const sql = 'select * from productos where id=?'
+    base_datos.all(sql, [id], (error, fila)=> {
         if (error){
             console.log('Error al consultar el producto')
         } else {
-            // 2. Buscamos las marcas de la base de datos
-            base_datos.all(sqlMarcas, (errorMarcas, lista_marcas) => {
-                if (errorMarcas) {
-                    console.log('Error al consultar las marcas')
-                } else {
-                    // 3. Mandamos tanto el producto (fila) como las marcas (lista_marcas)
-                    res.render('editar.ejs', { fila, lista_marcas })
-                }
-            })
+            res.render('editar.ejs', { fila })
         }
     })    
 })

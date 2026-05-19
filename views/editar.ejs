@@ -9,14 +9,22 @@
                 <label>Nombre del producto</label>
                 <input type="text" name="nombre" class="form-control" required minlength="4" maxlength="30"
                     value="<%= fila[0].nombre %>">
-
                 <label>Marca</label>
+                <%
+                    function etiqueta(valor){
+                        if (valor == fila[0].marca){
+                            return 'selected'
+                        } 
+                        return ''
+                    }
+                %>    
+
                 <select class="form-select" name="marca">
-                    <% for (let i = 0; i < lista_marcas.length; i++) { %>
-                        <option value="<%= lista_marcas[i].marca %>" <%= lista_marcas[i].marca == fila[0].marca ? 'selected' : '' %> >
-                            <%= lista_marcas[i].marca %>
-                        </option>
-                    <% } %>
+                    <option value="Marinela" <%= etiqueta('Marinela')%> >Marinela</option>
+                    <option value="Sabritas" <%= etiqueta('Sabritas')%> >Sabritas</option>
+                    <option value="Coca Cola" <%= etiqueta('Coca Cola')%> >Coca Cola</option>
+                    <option value="Dolores" <%= etiqueta('Dolores')%> >Dolores</option>
+                    <option value="Gamesa" <%= etiqueta('Gamesa')%> >Gamesa</option>
                 </select>
 
                 <label>Precio</label>
@@ -36,4 +44,5 @@
         </div>
     </form>
 
-<%- include('pie_pagina.ejs') %>
+
+    <%- include('pie_pagina.ejs') %>
